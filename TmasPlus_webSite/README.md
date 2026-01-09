@@ -1,73 +1,202 @@
-# React + TypeScript + Vite
+# 🚗 TmasPlus Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dashboard administrativo web para la plataforma de movilidad T+Plus. Sistema completo de gestión de conductores, vehículos, reservas y operaciones corporativas.
 
-Currently, two official plugins are available:
+## 📋 Descripción del Proyecto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+TmasPlus Dashboard es una aplicación web desarrollada con React 19, TypeScript y Vite que permite a los administradores gestionar todos los aspectos de la plataforma de transporte T+Plus, incluyendo:
 
-## React Compiler
+- 👥 Gestión de usuarios y conductores
+- 🚗 Gestión de vehículos y documentos
+- 📅 Reservas corporativas e individuales
+- 💰 Facturación y pagos
+- 📝 Contratos y documentación legal
+- 🔔 Notificaciones y comunicaciones
+- ⚙️ Configuración del sistema
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Stack Tecnológico
 
-## Expanding the ESLint configuration
+### Frontend
+- **React 19.1.1** - Framework UI
+- **TypeScript 5.9.3** - Tipado estático
+- **Vite 7.1.7** - Build tool y dev server
+- **Tailwind CSS 3.4.3** - Estilos utility-first
+- **React Router DOM 7.9.4** - Enrutamiento
+- **Framer Motion 12.23.24** - Animaciones
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend & Servicios
+- **Supabase 2.39.0** - Backend as a Service
+  - Autenticación
+  - Base de datos PostgreSQL
+  - Storage de archivos
+  - Realtime (preparado)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### UI & Utilidades
+- **Lucide React** - Iconos
+- **React Icons** - Iconos adicionales
+- **Sonner** - Notificaciones toast
+- **Zod** - Validación de esquemas
+- **@react-pdf/renderer** - Generación de PDFs
+- **Leaflet** - Mapas interactivos
+- **File Saver** - Descarga de archivos
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📁 Estructura del Proyecto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+TmasPlus_webSite/
+├── src/
+│   ├── components/          # Componentes reutilizables
+│   │   ├── auth/           # Componentes de autenticación
+│   │   ├── layout/         # Layout components (Sidebar, Topbar)
+│   │   └── ui/             # Componentes UI base
+│   ├── config/             # Configuración
+│   │   ├── supabase.ts     # Cliente Supabase
+│   │   ├── database.types.ts  # Tipos de BD
+│   │   └── constants.ts    # Constantes globales
+│   ├── contexts/           # Contextos React
+│   │   └── AuthContext.tsx
+│   ├── hooks/              # Custom hooks
+│   ├── layouts/            # Layouts de página
+│   ├── pages/              # Páginas de la aplicación
+│   ├── routes/             # Configuración de rutas
+│   ├── services/           # Servicios de backend
+│   │   ├── auth.service.ts
+│   │   ├── users.service.ts
+│   │   ├── drivers.service.ts
+│   │   ├── cars.service.ts
+│   │   ├── storage.service.ts
+│   │   └── realtime.service.ts
+│   ├── types/              # Tipos TypeScript globales
+│   ├── utils/              # Utilidades
+│   └── assets/             # Recursos estáticos
+├── public/                 # Archivos públicos
+└── docs/                   # Documentación adicional
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Inicio Rápido
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerrequisitos
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18+ 
+- npm o yarn
+- Cuenta de Supabase configurada
+
+### Instalación
+
+```bash
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env.local
+# Editar .env.local con tus credenciales de Supabase
 ```
+
+### Variables de Entorno
+
+Crear archivo `.env.local`:
+
+```env
+VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_ANON_KEY=tu_anon_key
+VITE_APP_VERSION=1.0.0
+VITE_NODE_ENV=development
+VITE_POLLING_INTERVAL=5000
+```
+
+### Desarrollo
+
+```bash
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173`
+
+### Build
+
+```bash
+npm run build
+```
+
+### Preview de Producción
+
+```bash
+npm run preview
+```
+
+## 📚 Documentación
+
+Para entender completamente el proyecto, consulta:
+
+1. **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - Arquitectura del sistema
+2. **[DEVELOPMENT.md](./docs/DEVELOPMENT.md)** - Guía de desarrollo
+3. **[API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md)** - Documentación de servicios
+4. **[DATABASE_SCHEMA.md](./docs/DATABASE_SCHEMA.md)** - Esquema de base de datos
+5. **[WORKFLOWS.md](./docs/WORKFLOWS.md)** - Flujos de trabajo principales
+6. **[INFORME_ACTUALIZACIONES.md](./INFORME_ACTUALIZACIONES.md)** - Historial de cambios
+
+## 🔐 Autenticación
+
+El dashboard está protegido y solo permite acceso a usuarios con:
+- `user_type: 'admin'`
+- `approved: true`
+- `blocked: false`
+
+## 🎯 Características Principales
+
+### Gestión de Conductores
+- Registro en 4 pasos
+- Aprobación/rechazo
+- Gestión de documentos
+- Asociación vehículo-conductor
+
+### Gestión de Vehículos
+- CRUD completo
+- Validación de placas únicas
+- Gestión de documentos (SOAT, tarjeta de propiedad, etc.)
+- Imágenes de vehículos
+
+### Reservas
+- Reservas corporativas
+- Historial de reservas
+- Detalles de reservas
+- Cálculo de tarifas
+
+### Storage
+- Subida de documentos
+- Gestión de imágenes
+- Validación de archivos (tamaño, tipo)
+
+## 🧪 Testing
+
+```bash
+npm run lint
+```
+
+## 📝 Convenciones de Código
+
+- **TypeScript**: Tipado estricto en toda la aplicación
+- **Naming**: camelCase para variables, PascalCase para componentes
+- **Imports**: Usar alias `@/` para imports absolutos
+- **Servicios**: Clases estáticas con métodos estáticos
+- **Errores**: Usar `ErrorHandler` para manejo centralizado
+
+## 🤝 Contribución
+
+1. Crear rama desde `main`
+2. Realizar cambios
+3. Commit con mensajes descriptivos
+4. Push y crear Pull Request
+
+## 📄 Licencia
+
+ISC
+
+## 👥 Equipo
+
+TmasPlus Development Team
+
+---
+
+**Versión:** 1.0.0  
+**Última actualización:** 2024
