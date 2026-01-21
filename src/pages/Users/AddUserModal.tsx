@@ -126,9 +126,10 @@ const FIELD_DEFS: FieldDef[] = [
     label: "Tipo de Vehículo",
     kind: "select",
     options: [
-      { value: "auto", label: "Automóvil" },
-      { value: "moto", label: "Motocicleta" },
-      { value: "van", label: "Van" },
+      { value: "x_plus", label: "Automóvil" },
+      { value: "taxi_plus", label: "Taxi" },
+      { value: "comfort_plus", label: "Comfort" },
+      { value: "van_plus", label: "Van" }
     ],
     showWhen: (t) => t === "conductor",
   },
@@ -174,6 +175,8 @@ const FIELD_DEFS: FieldDef[] = [
 export const AddUserModal: React.FC<Props> = ({ open, onClose, onSubmit }) => {
   const [type, setType] = useState<UserType>("cliente");
   const [form, setForm] = useState<FormState>(initialForm);
+  const [acceptTerms, setAcceptTerms] = useState(false);
+
 
   function update<K extends keyof FormState>(k: K, v: FormState[K]) {
     setForm((s) => ({ ...s, [k]: v }));
@@ -198,18 +201,31 @@ export const AddUserModal: React.FC<Props> = ({ open, onClose, onSubmit }) => {
       size="xl"
       footer={
         <>
-          <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-          <Button type="submit" onClick={handleSubmit}>Guardar</Button>
+          <Button variant="secondary" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={!acceptTerms}
+          >
+            Guardar
+          </Button>
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Tipo de Usuario */}
         <div>
           <p className="text-xs text-slate-500 mb-2">Tipo de Usuario</p>
-          <Tabs tabs={USER_TABS as any} value={type} onChange={(v) => setType(v as UserType)} />
+          <Tabs
+            tabs={USER_TABS as any}
+            value={type}
+            onChange={(v) => setType(v as UserType)}
+          />
         </div>
 
+        {/* Campos principales */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {visibleFields.map((f) => {
             const col = f.colSpan === 2 ? "md:col-span-2" : undefined;
@@ -219,7 +235,9 @@ export const AddUserModal: React.FC<Props> = ({ open, onClose, onSubmit }) => {
                 <div key={f.id} className={col}>
                   <Checkbox
                     checked={Boolean(form[f.id])}
-                    onChange={(e) => update(f.id, e.target.checked as any)}
+                    onChange={(e) =>
+                      update(f.id, e.target.checked as any)
+                    }
                     label={f.label}
                   />
                 </div>
@@ -234,16 +252,19 @@ export const AddUserModal: React.FC<Props> = ({ open, onClose, onSubmit }) => {
                   label={f.label}
                   className={col}
                   value={(form[f.id] as string) ?? ""}
-                  onChange={(e) => update(f.id, e.target.value as any)}
+                  onChange={(e) =>
+                    update(f.id, e.target.value as any)
+                  }
                 >
                   {(f.options || []).map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </FloatingSelect>
               );
             }
 
-            // input
             return (
               <FloatingInput
                 key={f.id}
@@ -252,10 +273,75 @@ export const AddUserModal: React.FC<Props> = ({ open, onClose, onSubmit }) => {
                 type={f.type}
                 className={col}
                 value={(form[f.id] as string) ?? ""}
-                onChange={(e) => update(f.id, e.target.value as any)}
+                onChange={(e) =>
+                  update(f.id, e.target.value as any)
+                }
               />
             );
           })}
+        </div>
+
+        {/* ================= DOCUMENTOS ================= */}
+        {(type === "cliente" || type === "conductor") && (
+          <div className="border rounded-lg p-4 space-y-3">
+            <h3 className="text-sm font-medium text-slate-700">
+              Documentos requeridos
+            </h3>
+
+            <p className="text-xs text-slate-500">
+              Podrás subir los documentos desde este dispositivo o escanearlos
+              con tu celular.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                disabled={type === "conductor" && !form.tipoVehiculo}
+                variant="secondary"
+                type="button"
+                onClick={() => {
+                  const params = new URLSearchParams({
+                    profile:
+                      type === "cliente"
+                        ? "cliente"
+                        : form.tipoVehiculo, // ej: x_plus | comfort_plus | etc
+                  });
+
+                  window.open(`/document-upload?${params.toString()}`, "_blank");
+                }}
+              >
+                Subir documentos desde este dispositivo
+              </Button>
+            </div>
+
+            <p className="text-xs text-slate-400">
+              * Los documentos serán revisados posteriormente por nuestro equipo.
+            </p>
+          </div>
+        )}
+
+        {/* ================= TÉRMINOS ================= */}
+        <div className="pt-2">
+          <Checkbox
+            checked={acceptTerms}
+            onChange={(e) => setAcceptTerms(e.target.checked)}
+            label={
+              <span className="text-xs text-slate-600">
+                Al registrarte con T+Plus SAS y/o al hacer uso de nuestra
+                tecnología y crear tu cuenta, aceptas irrevocablemente todos
+                nuestros{" "}
+                <a
+                  href="https://tmasplus.com/terminos-y-condiciones"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  Términos y Condiciones - Tratamiento de Datos y Política de
+                  Privacidad
+                </a>
+                .
+              </span>
+            }
+          />
         </div>
       </form>
     </Modal>

@@ -19,6 +19,7 @@ import ProfilePage from "@/pages/Profile/ProfilePage";
 import SettingsPage from "@/pages/Settings/SettingsPage";
 import TollsPage from "@/pages/Tolls/TollsPage";
 import NotificationsPage from "@/pages/Notifications/NotificationsPage";
+import DocumentUpload from "@/pages/Users/DocumentUpload/DocumentUpload";
 
 // Placeholders rápidos (reemplaza por tus páginas reales)
 const NotFound = () => <div className="p-6"><h1 className="text-2xl font-semibold">404 — No encontrado</h1></div>;
@@ -27,6 +28,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/document-upload" element={<DocumentUpload />} />
 
       {/* Redirige raíz a /home */}
       <Route path="/" element={<Navigate to="/login" replace />} />
