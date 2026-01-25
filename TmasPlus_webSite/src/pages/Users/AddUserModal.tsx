@@ -3,6 +3,8 @@ import { Modal } from "@/components/ui/Modal";
 import { FloatingInput, FloatingSelect, Checkbox } from "@/components/ui/FloatingField";
 import { Button } from "@/components/ui/Button";
 import { Tabs } from "@/components/ui/Tabs";
+import { RegistrationService } from "@/services/registration.service";
+import { useFormState } from "react-dom";
 
 type UserType = "cliente" | "conductor" | "empresa";
 
@@ -171,6 +173,12 @@ const FIELD_DEFS: FieldDef[] = [
   { id: "password", label: "Contraseña", kind: "input", type: "password" },
 ];
 
+const USER_TYPE_MAP: Record<UserType, 'customer' | 'driver' | 'company'> = {
+  cliente: 'customer',
+  conductor: 'driver',
+  empresa: 'company',
+};
+
 export const AddUserModal: React.FC<Props> = ({ open, onClose, onSubmit }) => {
   const [type, setType] = useState<UserType>("cliente");
   const [form, setForm] = useState<FormState>(initialForm);
@@ -179,9 +187,20 @@ export const AddUserModal: React.FC<Props> = ({ open, onClose, onSubmit }) => {
     setForm((s) => ({ ...s, [k]: v }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    await RegistrationService.register({
+      email: form.email,
+      password: form.password,
+      first_name: form.nombre,
+      last_name: form.apellido,
+      mobile: form.telefono,
+      user_type: USER_TYPE_MAP[type],
+    });
+
     onSubmit({ type, ...form });
+    onClose();
   }
 
   // Filtrar los campos a mostrar según el tipo seleccionado
