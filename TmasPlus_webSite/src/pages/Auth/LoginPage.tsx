@@ -102,7 +102,7 @@ export const LoginPage: React.FC = () => {
           open={openAdd}
           onClose={() => setOpenAdd(false)}
           onSubmit={(payload) => {
-            console.log("Guardar:", payload);
+            // console.log("Guardar:", payload);
             setOpenAdd(false);
           }}
         />
