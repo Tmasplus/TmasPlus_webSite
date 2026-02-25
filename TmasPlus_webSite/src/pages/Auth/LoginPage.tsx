@@ -71,9 +71,7 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleRegister = () => {
-    toast.info('El registro de conductores estará disponible próximamente');
-    // TODO: Redirigir a página de registro de conductores
-    // navigate('/register-driver');
+    navigate('/register-driver');
   };
 
   // Si está cargando la verificación de auth, mostrar loader
